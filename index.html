@@ -37,12 +37,52 @@
             border-radius: 1rem;
             padding: 2rem;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .countdown {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            color: #DC2626;
+            font-weight: bold;
+            font-size: 1.1rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .features-section {
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: #F8FAFC;
+            border-radius: 0.5rem;
+            border: 1px solid #E2E8F0;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin: 0.75rem 0;
+            color: #374151;
+            font-size: 1.1rem;
+        }
+
+        .feature-item:before {
+            content: "✓";
+            color: #10B981;
+            margin-right: 0.75rem;
+            font-weight: bold;
         }
 
         h1 {
             text-align: center;
             color: var(--primary-color);
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             font-size: 2rem;
         }
 
@@ -70,7 +110,7 @@
 
         input[type="file"] {
             width: 100%;
-            padding: 0.5rem;
+            padding: 0.75rem;
             border: 1px dashed #E5E7EB;
             border-radius: 0.5rem;
             cursor: pointer;
@@ -100,15 +140,119 @@
             background-color: var(--secondary-color);
         }
 
-        .success-message {
+        .popup {
             display: none;
-            text-align: center;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
             padding: 2rem;
-            background-color: #DEF7EC;
-            color: #03543F;
-            border-radius: 0.5rem;
-            margin-top: 1rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
         }
+
+        .popup-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6B7280;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+
+        .popup-close:hover {
+            background-color: #F3F4F6;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .error {
+            color: #DC2626;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .preview-container {
+        display: flex;
+        gap: 10px;
+        margin-top: 0.5rem;
+    }
+
+    .image-preview {
+        width: 100px;
+        height: 100px;
+        border-radius: 0.5rem;
+        border: 2px solid #E5E7EB;
+        display: none;
+        object-fit: cover;
+        background: #F9FAFB;
+    }
+
+    .preview-label {
+        font-size: 0.875rem;
+        color: #6B7280;
+        margin-top: 0.25rem;
+    }
+
+
+    /* Add these styles to your existing CSS */
+.popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    z-index: 1001; /* Increased z-index */
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000; /* Increased z-index */
+}
+
+/* Add media query for mobile devices */
+@media (max-width: 768px) {
+    .popup {
+        width: 95%;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+}
+
 
         @media (max-width: 768px) {
             .container {
@@ -119,19 +263,30 @@
             .form-card {
                 padding: 1.5rem;
             }
-        }
 
-        .error {
-            color: #DC2626;
-            font-size: 0.875rem;
-            margin-top: 0.25rem;
+            .countdown {
+                position: relative;
+                top: 0;
+                right: 0;
+                text-align: center;
+                margin-bottom: 1rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="form-card">
-            <h1>Job Application Form</h1>
+            <div class="countdown">Only 2 seats left!</div>
+            <h1>Data Entry Job Application</h1>
+            
+            <div class="features-section">
+                <div class="feature-item">No examination required</div>
+                <div class="feature-item">No prior experience needed</div>
+                <div class="feature-item">Direct job placement</div>
+                <div class="feature-item">Application fee: ₹100 only</div>
+            </div>
+
             <form id="recruitmentForm">
                 <div class="form-group">
                     <label for="fullName">Full Name *</label>
@@ -161,105 +316,221 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="marksheet">Upload Marksheet (JPG, PNG, PDF) *</label>
-                    <input type="file" id="marksheet" accept=".jpg,.jpeg,.png,.pdf" required>
-                </div>
+    <label for="marksheet">Upload Marksheet (JPG, PNG, PDF) *</label>
+    <input type="file" id="marksheet" accept=".jpg,.jpeg,.png,.pdf" required>
+    <div class="preview-container">
+        <img id="marksheetPreview" class="image-preview" alt="Marksheet preview">
+    </div>
+</div>
 
-                <div class="form-group">
-                    <label for="photo">Profile Photo *</label>
-                    <input type="file" id="photo" accept="image/*" required>
-                </div>
+<div class="form-group">
+    <label for="photo">Profile Photo *</label>
+    <input type="file" id="photo" accept="image/*" required>
+    <div class="preview-container">
+        <img id="photoPreview" class="image-preview" alt="Photo preview">
+    </div>
+</div>
 
-                <div class="form-group">
-                    <label for="diploma">Computer Diploma Certificate (Optional)</label>
-                    <input type="file" id="diploma" accept=".jpg,.jpeg,.png,.pdf">
-                </div>
+<div class="form-group">
+    <label for="diploma">Computer Diploma Certificate (Optional)</label>
+    <input type="file" id="diploma" accept=".jpg,.jpeg,.png,.pdf">
+    <div class="preview-container">
+        <img id="diplomaPreview" class="image-preview" alt="Diploma preview">
+    </div>
+</div>
 
                 <button type="submit" class="submit-btn">Apply</button>
             </form>
-            <div class="success-message" id="successMessage">
-                Thanks for submitting! Our team will contact you soon.
-            </div>
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="popup" id="successPopup">
+        <span class="popup-close" onclick="closePopup()">×</span>
+        <div class="success-message">
+            <h2 style="color: #10B981; margin-bottom: 1rem;">Thank you for submitting!</h2>
+            <p>Our team will contact you soon.</p>
         </div>
     </div>
 
     <script>
-        document.getElementById('recruitmentForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
+        // Handle image previews
+['marksheet', 'photo', 'diploma'].forEach(fieldName => {
+    const input = document.getElementById(fieldName);
+    const preview = document.getElementById(fieldName + 'Preview');
 
-            // Basic form validation
-            const form = this;
-            const formData = new FormData(form);
-            
-            // Convert files to base64 for localStorage
-            const files = {};
-            const filePromises = ['marksheet', 'photo', 'diploma'].map(async fieldName => {
-                const file = document.getElementById(fieldName).files[0];
-                if (file) {
-                    return new Promise((resolve, reject) => {
-                        const reader = new FileReader();
-                        reader.onload = () => {
-                            files[fieldName] = reader.result;
-                            resolve();
-                        };
-                        reader.onerror = reject;
-                        reader.readAsDataURL(file);
-                    });
+    input.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
                 }
-                return Promise.resolve();
-            });
-
-            await Promise.all(filePromises);
-
-            // Initialize Razorpay payment
-            const options = {
-                key: 'rzp_test_NVjKESTIqAI19D', // Replace with your actual Razorpay key
-                amount: 10000, // Amount in paise (100 INR)
-                currency: 'INR',
-                name: 'Data Entry Job Application',
-                description: 'Application Fee',
-                handler: function(response) {
-                    // Payment successful, save data to localStorage
-                    const applicationData = {
-                        fullName: document.getElementById('fullName').value,
-                        email: document.getElementById('email').value,
-                        phone: document.getElementById('phone').value,
-                        education: document.getElementById('education').value,
-                        files: files,
-                        paymentId: response.razorpay_payment_id,
-                        timestamp: new Date().toISOString()
-                    };
-
-                    // Save to localStorage
-                    const applications = JSON.parse(localStorage.getItem('jobApplications') || '[]');
-                    applications.push(applicationData);
-                    localStorage.setItem('jobApplications', JSON.stringify(applications));
-
-                    // Show success message
-                    document.getElementById('successMessage').style.display = 'block';
-                    form.reset();
-                },
-                prefill: {
-                    email: document.getElementById('email').value,
-                    contact: document.getElementById('phone').value
-                },
-                theme: {
-                    color: '#4F46E5'
-                }
-            };
-
-            const rzp = new Razorpay(options);
-            rzp.open();
-        });
-
-        // Client-side validation
-        const phoneInput = document.getElementById('phone');
-        phoneInput.addEventListener('input', function(e) {
-            this.value = this.value.replace(/[^0-9]/g, '');
-            if (this.value.length > 10) {
-                this.value = this.value.slice(0, 10);
+                reader.readAsDataURL(file);
+            } else if (file.type === 'application/pdf') {
+                preview.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0xNCA2djEyYTIgMiAwIDAgMS00IDB2LThhMiAyIDAgMCAxIDQgMHY4Ii8+PC9zdmc+';
+                preview.style.display = 'block';
             }
+        } else {
+            preview.style.display = 'none';
+        }
+    });
+});
+
+// Phone number validation
+const phoneInput = document.getElementById('phone');
+phoneInput.addEventListener('input', function(e) {
+    this.value = this.value.replace(/[^0-9]/g, '');
+    if (this.value.length > 10) {
+        this.value = this.value.slice(0, 10);
+    }
+});
+
+// Form submission and payment handling
+document.getElementById('recruitmentForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const form = this;
+    const files = {};
+    const filePromises = ['marksheet', 'photo', 'diploma'].map(async fieldName => {
+        const file = document.getElementById(fieldName).files[0];
+        if (file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    files[fieldName] = reader.result;
+                    resolve();
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+        return Promise.resolve();
+    });
+
+    try {
+        await Promise.all(filePromises);
+
+        const options = {
+            key: 'rzp_test_NVjKESTIqAI19D',
+            amount: 10000,
+            currency: 'INR',
+            name: 'Data Entry Job Application',
+            description: 'Application Fee',
+            handler: function(response) {
+                showSuccessPopup();
+                saveApplication(response.razorpay_payment_id, files, form);
+            },
+            prefill: {
+                email: document.getElementById('email').value,
+                contact: document.getElementById('phone').value
+            },
+            theme: {
+                color: '#4F46E5'
+            },
+            modal: {
+                ondismiss: function() {
+                    console.log('Payment cancelled');
+                }
+            }
+        };
+
+        const rzp = new Razorpay(options);
+        rzp.open();
+
+    } catch (error) {
+        console.error('Error processing form:', error);
+        alert('An error occurred. Please try again.');
+    }
+});
+
+function showSuccessPopup() {
+    const overlay = document.getElementById('overlay');
+    const popup = document.getElementById('successPopup');
+    
+    if (overlay && popup) {
+        overlay.style.display = 'block';
+        popup.style.display = 'block';
+        
+        // Force reflow
+        popup.offsetHeight;
+    }
+}
+
+function saveApplication(paymentId, files, form) {
+    const applicationData = {
+        fullName: document.getElementById('fullName').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        education: document.getElementById('education').value,
+        files: files,
+        paymentId: paymentId,
+        timestamp: new Date().toISOString()
+    };
+
+    const applications = JSON.parse(localStorage.getItem('jobApplications') || '[]');
+    applications.push(applicationData);
+    localStorage.setItem('jobApplications', JSON.stringify(applications));
+
+    // Reset form and previews
+    form.reset();
+    ['marksheet', 'photo', 'diploma'].forEach(fieldName => {
+        const preview = document.getElementById(fieldName + 'Preview');
+        if (preview) {
+            preview.style.display = 'none';
+        }
+    });
+}
+
+// Popup handling
+function closePopup() {
+    const overlay = document.getElementById('overlay');
+    const popup = document.getElementById('successPopup');
+    
+    if (overlay && popup) {
+        overlay.style.display = 'none';
+        popup.style.display = 'none';
+    }
+}
+
+// Event listeners for popup interaction
+document.addEventListener('DOMContentLoaded', function() {
+    const overlay = document.getElementById('overlay');
+    const popup = document.getElementById('successPopup');
+    
+    if (overlay) {
+        overlay.addEventListener('click', closePopup);
+        overlay.addEventListener('touchstart', closePopup);
+    }
+    
+    if (popup) {
+        const closeBtn = popup.querySelector('.popup-close');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                closePopup();
+            });
+        }
+        
+        popup.addEventListener('click', function(e) {
+            e.stopPropagation();
         });
+        
+        popup.addEventListener('touchstart', function(e) {
+            e.stopPropagation();
+        });
+    }
+});
+
+// Handle back button and page refresh
+window.addEventListener('pageshow', function(event) {
+    if (event.persisted) {
+        location.reload();
+    }
+});
     </script>
 </body>
 </html>
