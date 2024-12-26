@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Entry Job Application</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <style>
+        :root {
+            --primary-color: #4F46E5;
+            --secondary-color: #818CF8;
+            --bg-color: #F3F4F6;
+            --text-color: #1F2937;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #E5E7EB;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px dashed #E5E7EB;
+            border-radius: 0.5rem;
+            cursor: pointer;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .submit-btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+            background-color: #DEF7EC;
+            color: #03543F;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+                margin: 1rem;
+            }
+
+            .form-card {
+                padding: 1.5rem;
+            }
+        }
+
+        .error {
+            color: #DC2626;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-card">
+            <h1>Job Application Form</h1>
+            <form id="recruitmentForm">
+                <div class="form-group">
+                    <label for="fullName">Full Name *</label>
+                    <input type="text" id="fullName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <input type="tel" id="phone" pattern="[0-9]{10}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="education">Highest Education *</label>
+                    <select id="education" required>
+                        <option value="">Select Education</option>
+                        <option value="10th">10th</option>
+                        <option value="12th">12th</option>
+                        <option value="bachelor">Bachelor's Degree</option>
+                        <option value="master">Master's Degree</option>
+                        <option value="phd">PhD</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="marksheet">Upload Marksheet (JPG, PNG, PDF) *</label>
+                    <input type="file" id="marksheet" accept=".jpg,.jpeg,.png,.pdf" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="photo">Profile Photo *</label>
+                    <input type="file" id="photo" accept="image/*" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="diploma">Computer Diploma Certificate (Optional)</label>
+                    <input type="file" id="diploma" accept=".jpg,.jpeg,.png,.pdf">
+                </div>
+
+                <button type="submit" class="submit-btn">Apply</button>
+            </form>
+            <div class="success-message" id="successMessage">
+                Thanks for submitting! Our team will contact you soon.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('recruitmentForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            // Basic form validation
+            const form = this;
+            const formData = new FormData(form);
+            
+            // Convert files to base64 for localStorage
+            const files = {};
+            const filePromises = ['marksheet', 'photo', 'diploma'].map(async fieldName => {
+                const file = document.getElementById(fieldName).files[0];
+                if (file) {
+                    return new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onload = () => {
+                            files[fieldName] = reader.result;
+                            resolve();
+                        };
+                        reader.onerror = reject;
+                        reader.readAsDataURL(file);
+                    });
+                }
+                return Promise.resolve();
+            });
+
+            await Promise.all(filePromises);
+
+            // Initialize Razorpay payment
+            const options = {
+                key: 'rzp_test_NVjKESTIqAI19D', // Replace with your actual Razorpay key
+                amount: 10000, // Amount in paise (100 INR)
+                currency: 'INR',
+                name: 'Data Entry Job Application',
+                description: 'Application Fee',
+                handler: function(response) {
+                    // Payment successful, save data to localStorage
+                    const applicationData = {
+                        fullName: document.getElementById('fullName').value,
+                        email: document.getElementById('email').value,
+                        phone: document.getElementById('phone').value,
+                        education: document.getElementById('education').value,
+                        files: files,
+                        paymentId: response.razorpay_payment_id,
+                        timestamp: new Date().toISOString()
+                    };
+
+                    // Save to localStorage
+                    const applications = JSON.parse(localStorage.getItem('jobApplications') || '[]');
+                    applications.push(applicationData);
+                    localStorage.setItem('jobApplications', JSON.stringify(applications));
+
+                    // Show success message
+                    document.getElementById('successMessage').style.display = 'block';
+                    form.reset();
+                },
+                prefill: {
+                    email: document.getElementById('email').value,
+                    contact: document.getElementById('phone').value
+                },
+                theme: {
+                    color: '#4F46E5'
+                }
+            };
+
+            const rzp = new Razorpay(options);
+            rzp.open();
+        });
+
+        // Client-side validation
+        const phoneInput = document.getElementById('phone');
+        phoneInput.addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            if (this.value.length > 10) {
+                this.value = this.value.slice(0, 10);
+            }
+        });
+    </script>
+</body>
+</html>
